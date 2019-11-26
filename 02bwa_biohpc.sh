@@ -47,6 +47,7 @@ if [ "$PE" = "yes" ];
 		samtools sort -@ ${CORES} ./bam/${ID}.bam > ./sort_bam/${ID}_sort.bam
 		samtools index ./sort_bam/${ID}_sort.bam
 		samtools flagstat ./sort_bam/${ID}_sort.bam > ./sort_bam/${ID}_sort.stats
+	fi
 
 # Compare sorted stats file to unsorted stats file. Should be the same- # of reads will only change if one is truncated.
 # If they are the same, we want to delete the unsorted.
