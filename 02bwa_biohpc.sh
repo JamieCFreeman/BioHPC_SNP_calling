@@ -19,7 +19,7 @@
 # PE is yes/no: yes when data is pair end, no when single 
 
 # Check that variables are set & exit otherwise
-if [ -z "$RG_string" ] || [ -z "$REF" ] || [ -z "$CORES ] || [ -z "$ID" ] || [ -z "$PE" ];
+if [ -z "$RG_string" ] || [ -z "$REF" ] || [ -z "$CORES" ] || [ -z "$ID" ] || [ -z "$PE" ];
 then
  echo "One or more variables are undefined."
  exit 1
@@ -41,7 +41,8 @@ if [ "$PE" = "no" ];
 if [ "$PE" = "yes" ]; 
 	then
 	# Pipe bwa mem output directly to samtools to make bam (sam bigger)
-	bwa mem -M -R ${RG_string} -t ${CORES} ${REF} ./trim_fastq/${ID}_trim.fastq.gz 2> ./bam/${ID}_bwa.log | \
+	bwa mem -M -R ${RG_string} -t ${CORES} ${REF} ./trim_fastq/${ID}_trim_P_1.fastq.gz \
+		./trim_fastq/${ID}_trim_P_2.fastq.gz  2> ./bam/${ID}_bwa.log | \
 		samtools view -bS - > ./bam/${ID}.bam
 		samtools flagstat ./bam/${ID}.bam > ./bam/${ID}.stats
 		samtools sort -@ ${CORES} ./bam/${ID}.bam > ./sort_bam/${ID}_sort.bam
