@@ -15,6 +15,34 @@
 # Remember that GATK needs uncompressed reference file 
 
 
+# 3 levels of setup
+# 3 (whole script): creates all index files, runs fastQC, creates directory structure for analysis, logs program version info
+# 2 creates directory structure for analysis, logs program version info
+# 1 Just logs program version info
+
+
+# Log program version info
+
+mkdir -p ./metadata
+
+OUTPUT_FILE=$( echo  $( date +%Y-%m-%d )_$( echo $PWD | sed 's /.*/  g' )_version.log ) 
+
+echo $( date ) > ./metadata/$OUTPUT_FILE
+echo $PWD >> ./metadata/$OUTPUT_FILE
+
+/programs/parallel/bin/parallel --version >> ./metadata/$OUTPUT_FILE
+/programs/FastQC-0.11.8/fastqc --version >> ./metadata/$OUTPUT_FILE
+samtools --version >> ./metadata/$OUTPUT_FILE
+java -jar /programs/picard-tools-2.19.2/picard.jar CreateSequenceDictionary --version >> ./metadata/$OUTPUT_FILE
+java -jar /programs/trimmomatic/trimmomatic-0.39.jar -version >> ./metadata/$OUTPUT_FILE
+cmp --version >> ./metadata/$OUTPUT_FILE
+/programs/gatk4/gatk HaplotypeCaller --version >> ./metadata/$OUTPUT_FILE
+
+# If level = 1, then exit here.
+if [ "$1" -eq 1 ]; then
+ exit 0;
+fi
+
 
 # Set up environment with child directories for results. 
 mkdir ./trim_fastq
@@ -26,8 +54,10 @@ mkdir ./gvcf
 mkdir ./vcf
 mkdir ./GDB_import
 
-
-
+# If level = 2, then exit here.
+if [ "$1" -eq 2 ]; then
+ exit 0;
+fi
 
 
 # Do you want to run fastqc? Will check quality metrics for fq data.
