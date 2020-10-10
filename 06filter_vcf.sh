@@ -69,4 +69,13 @@
 	-V "./vcf/${VCF_pref}_INDELs_filtered.vcf" \
 	--exclude-filtered \
 	-O "./vcf/${VCF_pref}_INDELs_PASS.vcf"
+	
+# Combine filtered variants into one vcf
+java -jar /programs/picard-tools-2.19.2/picard.jar MergeVcfs \
+	I="./vcf/${VCF_pref}_INDELs_PASS.vcf" \
+	I="./vcf/${VCF_pref}_SNPs_PASS.vcf" \
+	O="./vcf/${VCF_pref}_all_PASS.vcf"
+
+
+	
 	 
