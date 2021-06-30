@@ -1,0 +1,22 @@
+
+
+# PATH entry for bioHPC
+export PATH=/programs/parallel/bin:$PATH
+
+# Need to set number of cores to give each bwa instance and reference genome fasta location.
+export CORES=24; export REF="/workdir/jcf236/round5_ref_dir/round5.curated.fasta"
+
+# Where input files are:
+## "id_list" file = text file with one sample id per line 
+## "RG" file with read group information for each sample in same order as id file - this is necessary for variant calling with GATK 
+## (eg: @RG\tID:BSAF7_3_RES_d\tSM:BSAF7_3_RES\tPU:none\tLB:F01\tPL:ILLUMINA)
+
+# In this case the job parallel is executing is just calling the script, so internal logging with the "--joblog"
+#   argument isn't really useful, just indicates whether scipts was called, not whether it worked.
+#   I do logging in internal script to check later. 
+
+# Run 3 jobs at a time
+parallel -j 3 --link \
+	 "ID={1}; RG_string={2}; source /workdir/jcf236/Workflow_biohpc/02bwa_biohpc.sh &" \
+	 :::: /workdir/jcf236/Workflow_biohpc/id_list.txt :::: /workdir/jcf236/Workflow_biohpc/lane_d_RG.txt
+   
